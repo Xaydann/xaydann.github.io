@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daily Star &mdash; Stardoku</title>
+<meta name="description" content="One Stardoku puzzle a day, the same one for everyone. Solve it in your browser — no app, no account.">
+<meta name="theme-color" content="#05070E">
+<meta property="og:title" content="Printable Stardoku puzzles — free generator">
+<meta property="og:description" content="Generate and print free Stardoku logic puzzles. Every one has a single solution and is solvable without guessing. Ink-friendly, classroom-friendly.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,16 58.8,37.9 82.3,39.5 64.3,54.6 70,77.5 50,65 30,77.5 35.7,54.6 17.7,39.5 41.2,37.9' fill='%23E8C66A'/%3E%3C/svg%3E">
+
+<style>
+:root{
+  --void-0:#05070E; --void-1:#0A0D1E; --void-2:#141833;
+  --ink:#F2F5FF; --ink-soft:#B6BDD6; --ink-faint:#7C849E;
+  --gold:#E8C66A; --gold-deep:#C0902C; --gold-ink:#20180A;
+  --line:rgba(255,255,255,.09); --card:rgba(255,255,255,.035);
+  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --wrap:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--void-0);color:var(--ink);font-family:var(--sans);
+  font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 620px at 14% -4%,rgba(110,91,200,.30),transparent 60%),
+    radial-gradient(760px 520px at 92% 12%,rgba(30,122,158,.22),transparent 58%),
+    radial-gradient(800px 700px at 50% 104%,rgba(160,64,138,.16),transparent 62%),
+    linear-gradient(172deg,#141833 0%,#0A0D1E 52%,#05070E 100%)}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+main,header,footer{position:relative;z-index:1}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);
+  background:rgba(5,7,14,.72);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:22px;height:66px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);
+  font-family:var(--serif);font-size:19px;letter-spacing:3px;font-weight:600}
+.brand svg{width:26px;height:26px;flex:none}
+.nav nav{margin-left:auto;display:flex;gap:24px;align-items:center}
+.nav a.lk{color:var(--ink-soft);text-decoration:none;font-size:14.5px;letter-spacing:.3px}
+.nav a.lk:hover,.nav a.lk[aria-current]{color:var(--gold)}
+.burger{display:none;background:none;border:0;color:var(--ink);cursor:pointer;padding:8px;margin-left:auto}
+@media(max-width:760px){
+  .nav nav{position:fixed;inset:66px 0 auto 0;flex-direction:column;gap:0;
+    background:rgba(6,9,20,.98);border-bottom:1px solid var(--line);display:none;padding:8px 0}
+  .nav nav.open{display:flex}
+  .nav nav a.lk{padding:15px 24px;width:100%;font-size:16px}
+  .burger{display:block}
+}
+
+/* type */
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.4px;line-height:1.14;margin:0}
+h1{font-size:clamp(38px,7.4vw,68px)}
+h2{font-size:clamp(27px,4.2vw,40px)}
+h3{font-size:19px;letter-spacing:0}
+.eyebrow{font-size:11px;letter-spacing:3.4px;text-transform:uppercase;color:var(--gold);
+  font-family:var(--sans);font-weight:600}
+p{color:var(--ink-soft);margin:14px 0}
+.lead{font-size:clamp(17px,2.1vw,20px);color:var(--ink-soft);max-width:60ch}
+section{padding:clamp(64px,9vw,116px) 0}
+.center{text-align:center}
+.center .lead{margin-inline:auto}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:15px 30px;
+  font-weight:650;font-size:15.5px;text-decoration:none;border:1px solid transparent;cursor:pointer;
+  transition:transform .18s cubic-bezier(.34,1.4,.64,1),box-shadow .18s,background .18s,color .18s}
+.btn-p{background:var(--gold);color:var(--gold-ink);box-shadow:0 10px 34px rgba(232,198,106,.22)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 16px 44px rgba(232,198,106,.32)}
+.btn-g{border-color:var(--line);color:var(--ink)}
+.btn-g:hover{border-color:rgba(232,198,106,.5);color:var(--gold)}
+.btn:active{transform:scale(.97)}
+
+/* cards */
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(268px,100%),1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
+.card h3{margin-bottom:8px}
+.card p{margin:0;font-size:15px}
+.ic{width:38px;height:38px;color:var(--gold);margin-bottom:14px}
+.ic svg{width:100%;height:100%}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:52px 0 64px;margin-top:20px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between}
+footer a{color:var(--ink-soft);text-decoration:none;display:block;padding:4px 0;font-size:14.5px}
+footer a:hover{color:var(--gold)}
+.fcol h4{font-size:11px;letter-spacing:2.6px;text-transform:uppercase;color:var(--ink-faint);
+  margin:0 0 10px;font-family:var(--sans);font-weight:600}
+.fine{color:var(--ink-faint);font-size:13px;margin-top:26px}
+
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:12px;z-index:99;background:var(--gold);color:var(--gold-ink);padding:10px 18px;border-radius:8px}
+.ctrl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.field > label:first-child{display:block;font-size:11px;letter-spacing:2.2px;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:9px;font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{flex:1 1 auto;min-width:42px;padding:11px 6px;border-radius:11px;border:1px solid var(--line);
+  background:transparent;color:var(--ink-soft);font-size:14px;cursor:pointer;font-family:var(--sans);
+  transition:transform .18s cubic-bezier(.34,1.4,.64,1),background .18s,color .18s,border-color .18s}
+.chip:hover:not(:disabled){border-color:rgba(232,198,106,.45)}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink);font-weight:700;
+  transform:translateY(-2px)}
+.chip:disabled{opacity:.26;cursor:not-allowed;text-decoration:line-through}
+.sw{display:flex;align-items:center;gap:11px;padding:9px 0;cursor:pointer;
+  font-size:14.5px;letter-spacing:0;text-transform:none;color:var(--ink-soft);font-weight:400}
+.sw input{appearance:none;width:44px;height:26px;border-radius:99px;background:rgba(255,255,255,.13);
+  position:relative;cursor:pointer;transition:background .2s;flex:none;margin:0}
+.sw input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:transform .2s}
+.sw input:checked{background:var(--gold)}
+.sw input:checked::after{transform:translateX(18px)}
+.sw span{font-size:14.5px;color:var(--ink-soft)}
+.note{font-size:13px;color:var(--ink-faint);margin-top:8px;line-height:1.5}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
+.print-cta{margin-top:30px;padding-top:28px;border-top:1px dashed var(--line);text-align:center}
+.btn-print{display:inline-flex;align-items:center;gap:14px;background:linear-gradient(160deg,#FFE6A0,var(--gold) 60%,var(--gold-deep));
+  color:var(--gold-ink);border:none;border-radius:18px;padding:22px 46px;font-size:19px;font-weight:750;
+  font-family:var(--sans);letter-spacing:.2px;cursor:pointer;
+  box-shadow:0 4px 0 var(--gold-deep),0 18px 42px rgba(232,198,106,.35);
+  transition:transform .16s cubic-bezier(.34,1.4,.64,1),box-shadow .16s}
+.btn-print svg{width:26px;height:26px;flex:none}
+.btn-print:hover{transform:translateY(-3px);box-shadow:0 7px 0 var(--gold-deep),0 26px 54px rgba(232,198,106,.42)}
+.btn-print:active{transform:translateY(1px);box-shadow:0 2px 0 var(--gold-deep),0 10px 26px rgba(232,198,106,.3)}
+.print-note{font-size:13px;color:var(--ink-faint);margin-top:14px;max-width:44ch;margin-inline:auto}
+#status{font-size:14px;color:var(--ink-faint)}
+.prog{height:3px;background:rgba(255,255,255,.09);border-radius:3px;overflow:hidden;margin-top:16px;display:none}
+.prog i{display:block;height:100%;background:var(--gold);width:0;transition:width .2s}
+/* ---------- sheet preview ---------- */
+#sheet{margin-top:34px}
+.page{background:#fff;color:#111;border-radius:8px;padding:52px 48px;margin:0 auto 26px;
+  max-width:760px;box-shadow:0 26px 70px rgba(0,0,0,.5)}
+.page-hd{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1.5px solid #111;padding-bottom:10px;margin-bottom:26px}
+.page-hd h3{font-family:var(--serif);font-size:22px;color:#111;letter-spacing:1px}
+.page-hd small{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#666}
+.pz{margin-bottom:34px;break-inside:avoid;page-break-inside:avoid}
+.pz-t{display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:8px;
+  letter-spacing:.6px}
+.pgrid{display:grid;margin:0 auto;background:#fff;width:fit-content}
+.pgrid div{position:relative;background:#fff}
+.pgrid div span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#777;font-family:var(--sans)}
+.pgrid div.sol::after{content:"";position:absolute;left:50%;top:50%;width:52%;height:52%;
+  transform:translate(-50%,-50%);
+  background:#111;clip-path:polygon(50% 4%,61% 36%,95% 36%,68% 57%,78% 90%,50% 70%,22% 90%,32% 57%,5% 36%,39% 36%)}
+.rules{font-size:12.5px;color:#333;line-height:1.7;border-top:1px solid #ccc;padding-top:14px;margin-top:6px}
+.rules b{color:#111}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:700px){.two{grid-template-columns:1fr}.page{padding:30px 22px}}
+/* ---------- print ---------- */
+@media print{
+  @page{margin:14mm}
+  #sky,#stars,.nav,footer,#builder,.nohint,.skip,.rv,.print-cta{display:none!important}
+  /* colour fills must survive the print pipeline */
+  .pgrid div{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .sheet-foot{display:block!important;color:#999!important}
+  #sheet,#sheet *,.page,.page *{display:revert!important}
+  #sheet .pgrid{display:grid!important}
+  #sheet .two{display:grid!important}
+  #sheet .pz-t,#sheet .page-hd{display:flex!important}
+  body{background:#fff!important;color:#000!important}
+  main{position:static}
+  #sheet{margin:0}
+  .page{box-shadow:none;border-radius:0;max-width:none;margin:0;padding:0;
+    page-break-after:always;background:#fff}
+  .page:last-child{page-break-after:auto}
+
+  section{padding:0}
+}
+
+.brand{flex-direction:column;align-items:flex-start;gap:0;line-height:1}
+.brand-row{display:flex;align-items:center;gap:11px}
+.nav .brand{position:relative}
+.nav .brand-sub{position:absolute;top:100%;left:37px;margin:0}
+.brand-sub{font-family:var(--sans);font-size:8.5px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600;
+  margin-top:3px;margin-left:37px;white-space:nowrap;pointer-events:none}
+@media(max-width:900px){.nav .brand-sub{display:none}}
+footer .brand-sub{white-space:normal;margin-left:0;letter-spacing:2px}
+footer .brand{max-width:100%}
+footer .brand-sub{margin-bottom:10px}
+
+.appnod-in{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+@media(max-width:640px){.appnod-in{grid-template-columns:1fr}}
+.qrbox{width:150px;height:150px;border-radius:18px;border:1px dashed rgba(232,198,106,.4);
+  background:rgba(232,198,106,.06);display:flex;align-items:center;justify-content:center;
+  flex:none;justify-self:center}
+.qr-ph{text-align:center;color:var(--gold);opacity:.75}
+.qr-ph svg{width:40px;height:40px;margin-bottom:8px}
+.qr-ph span{display:block;font-size:10.5px;letter-spacing:1.2px;line-height:1.5;color:var(--ink-faint)}
+.sheet-foot{margin-top:26px;padding-top:10px;border-top:1px solid #ddd;
+  font-size:10px;letter-spacing:.6px;color:#888;text-align:center;text-transform:uppercase}
+
+.dboard{touch-action:none}
+.hrt{color:#E8736B;font-size:14px;letter-spacing:1px}
+.hrt.gone{color:rgba(255,255,255,.16)}
+.dcell.wrong{animation:dwrong .45s}
+@keyframes dwrong{
+  0%,100%{transform:none}
+  15%{transform:translateX(-5px)}45%{transform:translateX(5px)}75%{transform:translateX(-3px)}
+}
+.dcell.wrong::after{content:"";position:absolute;inset:0;border-radius:5px;
+  background:rgba(232,115,107,.55);animation:dflash .45s}
+@keyframes dflash{0%{opacity:1}100%{opacity:0}}
+.dlose h3{color:#E8736B}
+</style>
+
+<style>
+.dwrap{max-width:640px;margin:0 auto}
+.dhead{text-align:center;margin-bottom:26px}
+.dmeta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.dpill{background:var(--card);border:1px solid var(--line);border-radius:999px;
+  padding:8px 16px;font-size:12.5px;color:var(--ink-soft)}
+.dpill b{color:var(--gold)}
+.dboard-wrap{position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:22px;padding:clamp(12px,2.6vw,20px)}
+.dboard{display:grid;gap:3px;aspect-ratio:1;width:100%;touch-action:manipulation}
+.dcell{border-radius:5px;position:relative;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;
+  transition:transform .12s cubic-bezier(.34,1.5,.64,1),box-shadow .2s,filter .2s;
+  -webkit-tap-highlight-color:transparent}
+.dcell:active{transform:scale(.88)}
+.dcell .gx{width:44%;height:44%;opacity:0;transform:scale(.4) rotate(-25deg);
+  transition:opacity .14s,transform .2s cubic-bezier(.34,1.6,.64,1)}
+.dcell.x .gx{opacity:.85;transform:none}
+.dcell .gs{position:absolute;width:70%;height:70%;opacity:0;transform:scale(.2);
+  transition:opacity .16s,transform .32s cubic-bezier(.34,1.7,.5,1)}
+.dcell.s .gs{opacity:1;transform:none}
+.dcell.s{box-shadow:0 0 14px 2px rgba(255,226,150,.45);z-index:2}
+.dcell.bad{animation:dshake .34s}
+@keyframes dshake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.dconst{position:absolute;inset:clamp(12px,2.6vw,20px);pointer-events:none;z-index:3}
+.dconst line{stroke:#FFE9AE;stroke-width:.7;stroke-linecap:round;opacity:.9;
+  filter:drop-shadow(0 0 2px rgba(255,233,174,.8))}
+.dstatus{text-align:center;min-height:44px;margin-top:18px;color:var(--ink-soft);font-size:15px}
+.dstatus b{color:var(--gold)}
+.dbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.dbtn{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink-soft);
+  border-radius:999px;padding:11px 22px;font-size:14px;font-family:var(--sans);cursor:pointer;
+  transition:all .18s}
+.dbtn:hover{border-color:rgba(232,198,106,.5);color:var(--gold)}
+.dwin{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(5,7,14,.92);backdrop-filter:blur(6px);border-radius:22px;
+  opacity:0;pointer-events:none;transition:opacity .4s;z-index:6;text-align:center;padding:24px}
+.dwin.on{opacity:1;pointer-events:auto}
+.dwin-star{font-size:58px;color:var(--gold);line-height:1;
+  filter:drop-shadow(0 0 20px rgba(232,198,106,.7))}
+.dwin.on .dwin-star{animation:dpop .6s cubic-bezier(.34,1.6,.5,1)}
+@keyframes dpop{0%{transform:scale(0) rotate(-90deg)}100%{transform:none}}
+.dwin h3{font-family:var(--serif);font-size:30px;margin:10px 0 4px}
+.dwin p{margin:0 0 16px;font-size:14.5px}
+.dtime{font-variant-numeric:tabular-nums}
+.dnext{font-size:13px;color:var(--ink-faint);margin-top:22px;text-align:center}
+@media (prefers-reduced-motion:reduce){
+  .dcell,.dcell .gs,.dcell .gx{transition:none}.dwin.on .dwin-star{animation:none}
+}
+</style>
+</head><body>
+<div id="sky"></div><canvas id="stars" aria-hidden="true"></canvas>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="brand-row"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="bg1" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0%" stop-color="#FFF6DC"/><stop offset="40%" stop-color="#F2D189"/><stop offset="100%" stop-color="#C0902C"/></linearGradient></defs><polygon points="50,16 58.8,37.9 82.3,39.5 64.3,54.6 70,77.5 50,65 30,77.5 35.7,54.6 17.7,39.5 41.2,37.9" fill="url(#bg1)"/></svg>STARDOKU</span><span class="brand-sub">The Stellar Logic Puzzle</span></a>
+  <button class="burger" aria-label="Menu" aria-expanded="false"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <nav><a class="lk" href="index.html">Game</a><a class="lk" href="daily.html" aria-current="page">Daily</a><a class="lk" href="printables.html">Printables</a><a class="lk" href="index.html#about">About</a><a class="lk" href="index.html#contact">Contact</a></nav>
+</div></header>
+<main id="main">
+<section><div class="wrap"><div class="dwrap">
+  <div class="dhead">
+    <div class="eyebrow rv">Daily Star</div>
+    <h1 class="rv" style="font-size:clamp(32px,5.6vw,48px);margin:12px 0 8px">Today&rsquo;s puzzle</h1>
+    <p class="lead rv" style="margin-inline:auto">One 9&times;9 board a day, the same one for everyone
+    in the world. It always needs the advanced techniques, and it is always solvable without guessing.</p>
+    <div class="dmeta rv">
+      <span class="dpill" id="dDate">&mdash;</span>
+      <span class="dpill">Grid <b>9&times;9</b></span>
+      <span class="dpill" id="dDiff">&mdash;</span>
+      <span class="dpill" id="dHearts"></span>
+      <span class="dpill dtime" id="dTimer">0:00</span>
+    </div>
+  </div>
+
+  <div class="dboard-wrap rv">
+    <div class="dboard" id="dBoard"></div>
+    <svg class="dconst" id="dConst" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+    <div class="dwin" id="dWin"><div>
+      <div class="dwin-star">&#9733;</div>
+      <h3>Solved</h3>
+      <p id="dWinSub">&mdash;</p>
+      <a class="btn btn-p" href="https://apps.apple.com/app/stardoku-logic-puzzle/id6808870780" id="appstore-daily">Get the full game</a>
+    </div></div>
+    <div class="dwin dlose" id="dLose"><div>
+      <div class="dwin-star" style="color:#E8736B">&#9733;</div>
+      <h3>Out of hearts</h3>
+      <p id="dLoseSub">&mdash;</p>
+      <a class="btn btn-g" href="printables.html">Try a printable puzzle</a>
+    </div></div>
+  </div>
+
+  <p class="dstatus" id="dStatus"><b>Drag</b> to sweep X’s on and off &nbsp;&middot;&nbsp; <b>Double&#8209;tap</b> to place a star</p>
+  <div class="dbar">
+    <button class="dbtn" id="dClear">Clear board</button>
+  </div>
+  <p class="dnext" id="dNext"></p>
+</div></div></section>
+
+<section style="padding-top:0"><div class="wrap"><div class="dwrap">
+  <div class="card rv">
+    <h3>The rules</h3>
+    <p style="font-size:15px;margin-bottom:0">Place one star in every <b>row</b>, every <b>column</b>
+    and every <b>colour region</b>. No two stars may touch &mdash; not side by side, and not
+    diagonally. Your progress today is saved in this browser, so you can come back to it.</p>
+  </div>
+</div></div></section>
+</main>
+</main>
+<footer><div class="wrap">
+  <div class="fcol" style="max-width:290px">
+    <a class="brand" href="index.html" style="margin-bottom:12px"><span class="brand-row"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="bg1" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0%" stop-color="#FFF6DC"/><stop offset="40%" stop-color="#F2D189"/><stop offset="100%" stop-color="#C0902C"/></linearGradient></defs><polygon points="50,16 58.8,37.9 82.3,39.5 64.3,54.6 70,77.5 50,65 30,77.5 35.7,54.6 17.7,39.5 41.2,37.9" fill="url(#bg1)"/></svg>STARDOKU</span><span class="brand-sub">The Stellar Logic Puzzle</span></a>
+    <p style="font-size:14px;margin:0">A logic puzzle you solve by reasoning, never by guessing. Every solve becomes a star in your own sky.</p>
+  </div>
+  <div class="fcol"><h4>Game</h4>
+    <a href="index.html#how">How to play</a><a href="index.html#modes">Modes</a><a href="index.html#about">About</a></div>
+  <div class="fcol"><h4>Free stuff</h4>
+    <a href="daily.html">Daily Star</a><a href="printables.html">Printable puzzles</a><a href="printables.html#generator">Puzzle generator</a></div>
+  <div class="fcol"><h4>Legal &amp; contact</h4>
+    <a href="privacy.html">Privacy policy</a>
+    <a href="mailto:stardokulogicpuzzle@gmail.com">stardokulogicpuzzle@gmail.com</a></div>
+  <p class="fine" style="width:100%">&copy; 2026 Stardoku. Made by one person. Printable puzzles are free to use at home, in classrooms and in clubs.</p>
+</div></footer>
+<script>
+(function(){
+  var c=document.getElementById('stars'); if(!c) return;
+  var x=c.getContext('2d'),S=[],raf,reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function size(){var d=Math.min(devicePixelRatio||1,2);
+    c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=innerWidth+'px';
+    c.style.height=innerHeight+'px';x.setTransform(d,0,0,d,0,0);build();}
+  function build(){S=[];var n=Math.min(190,Math.round(innerWidth*innerHeight/9000));
+    for(var i=0;i<n;i++)S.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+      r:Math.random()*1.25+.3,a:Math.random()*.55+.12,s:Math.random()*.5+.15,
+      p:Math.random()*Math.PI*2,t:Math.random()<.08?'#FFD9B5':(Math.random()<.12?'#BBD0FF':'#EAF0FF')});}
+  var off=0;
+  function draw(ts){
+    x.clearRect(0,0,innerWidth,innerHeight);
+    for(var i=0;i<S.length;i++){var s=S[i];
+      var tw=reduce?1:(.72+.28*Math.sin(ts/900*s.s+s.p));
+      x.globalAlpha=s.a*tw;x.fillStyle=s.t;
+      x.beginPath();x.arc(s.x,s.y-off*s.s*.35,s.r,0,6.2832);x.fill();}
+    x.globalAlpha=1;raf=requestAnimationFrame(draw);
+  }
+  addEventListener('resize',size,{passive:true});
+  addEventListener('scroll',function(){off=scrollY;},{passive:true});
+  size();raf=requestAnimationFrame(draw);
+  addEventListener('pagehide',function(){cancelAnimationFrame(raf);});
+})();
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.14});
+  document.querySelectorAll('.rv').forEach(function(e){io.observe(e);});
+  var b=document.querySelector('.burger'),n=document.querySelector('.nav nav');
+  if(b)b.addEventListener('click',function(){n.classList.toggle('open');});
+  if(n)n.addEventListener('click',function(e){if(e.target.tagName==='A')n.classList.remove('open');});
+})();
+
+</script>
+
+<script>
+/* ===== engine (same code the app uses) ===== */
+const SD = (function () {
+  function mulberry32(seed){let a=seed>>>0;return function(){a|=0;a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+  function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function hashInts(a,b){let h=2166136261^Math.imul(a,374761393);h=Math.imul(h^(h>>>13),1274126177);h^=Math.imul(b,2654435761);h=Math.imul(h^(h>>>15),2246822519);return (h^(h>>>13))>>>0;}
+  function hashString(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+  function ortho(i,N){const r=Math.floor(i/N),c=i%N,o=[];if(r>0)o.push(i-N);if(r<N-1)o.push(i+N);if(c>0)o.push(i-1);if(c<N-1)o.push(i+1);return o;}
+  function isConnected(cells,N){const s=new Set(cells),seen=new Set([cells[0]]),st=[cells[0]];while(st.length){const c=st.pop();for(const nb of ortho(c,N))if(s.has(nb)&&!seen.has(nb)){seen.add(nb);st.push(nb);}}return seen.size===cells.length;}
+  function genPerm(N,rng,tries){for(let t=0;t<tries;t++){const p=new Array(N).fill(-1),used=new Set();
+    function bt(row){if(row===N)return true;for(const c of shuffle(Array.from({length:N},(_,i)=>i),rng)){if(used.has(c))continue;if(row>0&&Math.abs(c-p[row-1])<=1)continue;p[row]=c;used.add(c);if(bt(row+1))return true;used.delete(c);p[row]=-1;}return false;}
+    if(bt(0))return p;}return null;}
+  function bootstrap(N,cells){const r=new Array(N*N).fill(N-1);for(let i=0;i<N-1;i++)r[cells[i]]=i;return r;}
+  function candCols(N,regionOf,rowCol,regUsed,colUsed,row){const out=[];for(let c=0;c<N;c++){if(colUsed[c])continue;const reg=regionOf[row*N+c];if(regUsed[reg])continue;
+    if(row>0&&rowCol[row-1]!==-1&&Math.abs(c-rowCol[row-1])<=1)continue;if(row<N-1&&rowCol[row+1]!==-1&&Math.abs(c-rowCol[row+1])<=1)continue;out.push(c);}return out;}
+  function countSol(N,regionOf,limit,budget){const cu=new Array(N).fill(false),ru=new Array(N).fill(false),rc=new Array(N).fill(-1);let n=0,nodes=0,ab=false;
+    (function bt(f){if(n>=limit||ab)return;if(++nodes>budget){ab=true;return;}if(f===N){n++;return;}
+      let br=-1,bc=null;for(let r=0;r<N;r++){if(rc[r]!==-1)continue;const cs=candCols(N,regionOf,rc,ru,cu,r);if(!cs.length)return;if(!bc||cs.length<bc.length){br=r;bc=cs;if(cs.length===1)break;}}
+      for(const c of bc){const g=regionOf[br*N+c];rc[br]=c;cu[c]=true;ru[g]=true;bt(f+1);rc[br]=-1;cu[c]=false;ru[g]=false;if(n>=limit||ab)return;}})(0);
+    return ab?-1:n;}
+  function solveUnique(N,regionOf){const cu=new Array(N).fill(false),ru=new Array(N).fill(false),rc=new Array(N).fill(-1),sols=[];
+    (function bt(f){if(sols.length>=2)return;if(f===N){sols.push(rc.slice());return;}
+      let br=-1,bc=null;for(let r=0;r<N;r++){if(rc[r]!==-1)continue;const cs=candCols(N,regionOf,rc,ru,cu,r);if(!cs.length)return;if(!bc||cs.length<bc.length){br=r;bc=cs;if(cs.length===1)break;}}
+      for(const c of bc){const g=regionOf[br*N+c];rc[br]=c;cu[c]=true;ru[g]=true;bt(f+1);rc[br]=-1;cu[c]=false;ru[g]=false;if(sols.length>=2)return;}})(0);
+    return sols.length===1?sols[0]:null;}
+  function shape(N,regionOf,rng,moves){const R=regionOf.slice(),sz=new Array(N).fill(0);for(const g of R)sz[g]++;
+    for(let a=0;a<moves;a++){const w=sz.map(s=>1/s),tw=w.reduce((x,y)=>x+y,0);let p=rng()*tw,to=0;for(;to<N;to++){p-=w[to];if(p<=0)break;}if(to>=N)to=N-1;
+      const bd=[];for(let k=0;k<N*N;k++){if(R[k]===to)continue;for(const nb of ortho(k,N))if(R[nb]===to){bd.push(k);break;}}
+      if(!bd.length)continue;const i=bd[Math.floor(rng()*bd.length)],from=R[i];if(sz[from]<=1)continue;
+      const fc=[];for(let k=0;k<N*N;k++)if(R[k]===from)fc.push(k);
+      if(!isConnected(fc.filter(c=>c!==i),N))continue;R[i]=to;
+      if(countSol(N,R,2,4000)!==1){R[i]=from;continue;}sz[from]--;sz[to]++;}
+    return R;}
+  function regionsConnected(N,R){const by=Array.from({length:N},()=>[]);for(let i=0;i<N*N;i++)by[R[i]].push(i);return by.every(c=>c.length>0&&isConnected(c,N));}
+
+  /* ---- technique-based logical solver ---- */
+  const PAIRS=[[2,0],[0,2],[2,1],[1,2],[0,1],[1,0]];
+  function combos(arr,k){const out=[],cur=[];(function rec(s){if(cur.length===k){out.push(cur.slice());return;}for(let i=s;i<arr.length;i++){cur.push(arr[i]);rec(i+1);cur.pop();}})(0);return out;}
+  function logicalSolve(N,regionOf,maxLevel,maxTuple){
+    maxLevel=maxLevel||4; maxTuple=maxTuple||3;
+    const rc=Array.from({length:N},()=>[]);for(let i=0;i<N*N;i++)rc[regionOf[i]].push(i);
+    const cand=new Uint8Array(N*N).fill(1),rowS=new Int32Array(N).fill(-1),colS=new Int32Array(N).fill(-1),regS=new Int32Array(N).fill(-1);
+    let placed=0,used=0;
+    const fIdx=(f,x)=>f===0?Math.floor(x/N):f===1?(x%N):regionOf[x];
+    const fDone=(f,i)=>f===0?rowS[i]!==-1:f===1?colS[i]!==-1:regS[i]!==-1;
+    function fCands(f,i){const o=[];if(fDone(f,i))return o;
+      if(f===0){for(let c=0;c<N;c++){const x=i*N+c;if(cand[x])o.push(x);}}
+      else if(f===1){for(let r=0;r<N;r++){const x=r*N+i;if(cand[x])o.push(x);}}
+      else{for(const x of rc[i])if(cand[x])o.push(x);}return o;}
+    function place(x){const r=Math.floor(x/N),c=x%N,g=regionOf[x];rowS[r]=c;colS[c]=r;regS[g]=x;placed++;
+      for(let k=0;k<N;k++){cand[r*N+k]=0;cand[k*N+c]=0;}for(const y of rc[g])cand[y]=0;
+      for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<N&&nc>=0&&nc<N)cand[nr*N+nc]=0;}}
+    function starves(x){const r=Math.floor(x/N),c=x%N,g=regionOf[x],kill=new Set();
+      for(let k=0;k<N;k++){kill.add(r*N+k);kill.add(k*N+c);}for(const y of rc[g])kill.add(y);
+      for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<N&&nc>=0&&nc<N)kill.add(nr*N+nc);}
+      for(let rr=0;rr<N;rr++){if(rowS[rr]!==-1||rr===r)continue;let any=false;for(let cc=0;cc<N;cc++){const y=rr*N+cc;if(cand[y]&&!kill.has(y)){any=true;break;}}if(!any)return true;}
+      for(let cc=0;cc<N;cc++){if(colS[cc]!==-1||cc===c)continue;let any=false;for(let rr=0;rr<N;rr++){const y=rr*N+cc;if(cand[y]&&!kill.has(y)){any=true;break;}}if(!any)return true;}
+      for(let gg=0;gg<N;gg++){if(regS[gg]!==-1||gg===g)continue;let any=false;for(const y of rc[gg])if(cand[y]&&!kill.has(y)){any=true;break;}if(!any)return true;}
+      return false;}
+    function confine(k,fa,fb){const ua=[];for(let i=0;i<N;i++)if(!fDone(fa,i))ua.push(i);if(ua.length<k)return false;
+      for(const S of combos(ua,k)){const bs=new Set();let ok=true;
+        for(const a of S){const cs=fCands(fa,a);if(!cs.length){ok=false;break;}for(const x of cs)bs.add(fIdx(fb,x));if(bs.size>k){ok=false;break;}}
+        if(!ok||bs.size!==k)continue;const ss=new Set(S);let ch=false;
+        for(const b of bs)for(const x of fCands(fb,b))if(!ss.has(fIdx(fa,x))&&cand[x]){cand[x]=0;ch=true;}
+        if(ch)return true;}return false;}
+    let guard=0;
+    while(placed<N){ if(++guard>20000)break; let prog=false;
+      for(let f=0;f<3&&!prog;f++)for(let i=0;i<N;i++){if(fDone(f,i))continue;const cs=fCands(f,i);
+        if(!cs.length)return{solved:false,usedLevel:Infinity,rowStar:null};
+        if(cs.length===1){place(cs[0]);used=Math.max(used,1);prog=true;break;}}
+      if(prog)continue;
+      if(maxLevel>=2){for(const[a,b]of PAIRS)if(confine(1,a,b)){used=Math.max(used,2);prog=true;break;} if(prog)continue;}
+      if(maxLevel>=3){for(let k=2;k<=maxTuple&&!prog;k++)for(const[a,b]of PAIRS)if(confine(k,a,b)){used=Math.max(used,3);prog=true;break;} if(prog)continue;}
+      if(maxLevel>=4){for(let x=0;x<N*N;x++){if(!cand[x])continue;if(starves(x)){cand[x]=0;used=Math.max(used,4);prog=true;break;}} if(prog)continue;}
+      break;}
+    return{solved:placed===N,usedLevel:used,rowStar:Array.from(rowS)};}
+  function requiredLevel(N,regionOf){return Hint.requiredLevel(N,regionOf);}
+
+  function generatePuzzle(N,seed,budget){
+    const rng=mulberry32(seed>>>0);
+    const perm=genPerm(N,rng,2000); if(!perm)return null;
+    const cells=perm.map((c,r)=>r*N+c);
+    const R=shape(N,bootstrap(N,cells),rng,budget||2000);
+    const tp=solveUnique(N,R); if(!tp)return null;
+    return {N,seed,regionOf:R,solutionCells:tp.map((c,r)=>r*N+c)};}
+
+  function levelSpec(l){
+    if(l<=6)   return{N:5, budget:240,  minTech:1, maxTech:1, cap:8};
+    if(l<=10)  return{N:6, budget:700,  minTech:1, maxTech:1, cap:9};
+    if(l<=15)  return{N:6, budget:700,  minTech:2, maxTech:2, cap:10};
+    if(l<=20)  return{N:6, budget:900,  minTech:2, maxTech:2, cap:11};
+    if(l<=25)  return{N:6, budget:900,  minTech:3, maxTech:3, cap:12};
+    if(l<=30)  return{N:7, budget:1100, minTech:3, maxTech:3, cap:14};
+    if(l<=35)  return{N:7, budget:1200, minTech:4, maxTech:4, cap:15};
+    if(l<=40)  return{N:7, budget:1300, minTech:4, maxTech:4, cap:16};
+    if(l<=45)  return{N:7, budget:1400, minTech:5, maxTech:5, cap:16};
+    if(l<=50)  return{N:8, budget:1700, minTech:5, maxTech:5, cap:18};
+    if(l<=70)  return{N:8, budget:1700, minTech:4, maxTech:5, cap:20};
+    if(l<=110) return{N:8, budget:2200, minTech:5, maxTech:5, cap:20};
+    if(l<=150) return{N:9, budget:2600, minTech:4, maxTech:5, cap:24};
+    return            {N:10,budget:3000, minTech:4, maxTech:5, cap:30};}
+  function supernovaSpec(r){
+    if(r<=2) return{N:6, budget:500,  minTech:1, maxTech:3, cap:12};
+    if(r<=5) return{N:6, budget:900,  minTech:2, maxTech:4, cap:14};
+    if(r<=9) return{N:7, budget:1300, minTech:3, maxTech:5, cap:16};
+    if(r<=14)return{N:8, budget:1800, minTech:4, maxTech:5, cap:20};
+    return           {N:9, budget:2600, minTech:4, maxTech:5, cap:24};}
+  function maxRegion(N,R){var s={},i;for(i=0;i<R.length;i++)s[R[i]]=(s[R[i]]||0)+1;
+    var m=0;for(var k in s)if(s[k]>m)m=s[k];return m;}
+  function derive(seedBase,spec,maxAttempts){
+    maxAttempts=maxAttempts||600;
+    var bands=[{min:spec.minTech,max:spec.maxTech,cap:spec.cap||999},
+               {min:spec.minTech,max:spec.maxTech,cap:999},
+               {min:1,max:5,cap:999}];
+    for(var bi=0;bi<bands.length;bi++){
+      var band=bands[bi];
+      for(var a=0;a<maxAttempts;a++){
+        var g=generatePuzzle(spec.N,hashInts(seedBase,a),spec.budget);
+        if(!g)continue;
+        if(maxRegion(spec.N,g.regionOf)>band.cap)continue;
+        var tech=Hint.requiredLevel(spec.N,g.regionOf);
+        if(tech===Infinity)continue;
+        if(tech<band.min||tech>band.max)continue;
+        return {N:spec.N,seed:g.seed,regionOf:g.regionOf,solutionCells:g.solutionCells,tech:tech};}}
+    return null;}
+  return { hashInts, hashString, generatePuzzle, logicalSolve, requiredLevel,
+           levelSpec, supernovaSpec, derive, countSol, regionsConnected };
+})();
+
+/* =================================================================== */
+
+/* ===================================================================
+   EXPLAINABLE DEDUCTION ENGINE  (single source of truth: the game, the
+   generator and the hint system all reason with THIS solver, so a
+   puzzle can never be certified by one and misjudged by another.)
+
+   Technique ladder:
+     1 SINGLE        a row/column/region has one square left
+     2 TOUCH         the two-block rule: whichever of these squares takes
+                     the star, it touches X -- so X is out
+     3 LINE          a unit's squares all lie in one line/region
+     4 SET           k units confined to k lines/regions
+     5 CONTRADICTION a star here would starve some other unit
+   =================================================================== */
+var REGION_NAMES=['crimson','amber','olive','green','teal','cyan','blue','indigo','violet','magenta'];
+var MAX_TECH_LEVEL=5;
+var Hint=(function(){
+  function makeCtx(N,regionOf){
+    var rc=[],i;
+    for(i=0;i<N;i++) rc.push([]);
+    for(i=0;i<N*N;i++) rc[regionOf[i]].push(i);
+    return {N:N,regionOf:regionOf,rc:rc,cand:new Uint8Array(N*N).fill(1),
+      rowS:new Int32Array(N).fill(-1),colS:new Int32Array(N).fill(-1),
+      regS:new Int32Array(N).fill(-1),placedCount:0};
+  }
+  function ctxPlace(ctx,cell){
+    var N=ctx.N,r=Math.floor(cell/N),c=cell%N,g=ctx.regionOf[cell],k,dr,dc,nr,nc;
+    if(ctx.regS[g]!==-1) return false;
+    ctx.rowS[r]=c; ctx.colS[c]=r; ctx.regS[g]=cell; ctx.placedCount++;
+    for(k=0;k<N;k++){ctx.cand[r*N+k]=0;ctx.cand[k*N+c]=0;}
+    for(k=0;k<ctx.rc[g].length;k++) ctx.cand[ctx.rc[g][k]]=0;
+    for(dr=-1;dr<=1;dr++)for(dc=-1;dc<=1;dc++){nr=r+dr;nc=c+dc;
+      if(nr>=0&&nr<N&&nc>=0&&nc<N) ctx.cand[nr*N+nc]=0;}
+    return true;
+  }
+  function famDone(ctx,f,i){return f===0?ctx.rowS[i]!==-1:f===1?ctx.colS[i]!==-1:ctx.regS[i]!==-1;}
+  function famIdx(ctx,f,x){return f===0?Math.floor(x/ctx.N):f===1?(x%ctx.N):ctx.regionOf[x];}
+  function famCands(ctx,f,i){
+    var out=[],N=ctx.N,c,r,x,k;
+    if(famDone(ctx,f,i))return out;
+    if(f===0){for(c=0;c<N;c++){x=i*N+c;if(ctx.cand[x])out.push(x);}}
+    else if(f===1){for(r=0;r<N;r++){x=r*N+i;if(ctx.cand[x])out.push(x);}}
+    else {for(k=0;k<ctx.rc[i].length;k++){x=ctx.rc[i][k];if(ctx.cand[x])out.push(x);}}
+    return out;
+  }
+  function famCells(ctx,f,i){
+    var out=[],N=ctx.N,c,r,k;
+    if(f===0){for(c=0;c<N;c++)out.push(i*N+c);}
+    else if(f===1){for(r=0;r<N;r++)out.push(r*N+i);}
+    else {for(k=0;k<ctx.rc[i].length;k++)out.push(ctx.rc[i][k]);}
+    return out;
+  }
+  function famLabel(f,i){return f===0?('row '+(i+1)):f===1?('column '+(i+1)):('the '+REGION_NAMES[i]+' region');}
+  function famPlural(f,l){
+    if(f===0)return 'rows '+l.map(function(i){return i+1;}).join(' and ');
+    if(f===1)return 'columns '+l.map(function(i){return i+1;}).join(' and ');
+    return 'the '+l.map(function(i){return REGION_NAMES[i];}).join(' and ')+' regions';
+  }
+  function combos(a,k){var o=[],c=[];(function rec(s){if(c.length===k){o.push(c.slice());return;}
+    for(var i=s;i<a.length;i++){c.push(a[i]);rec(i+1);c.pop();}})(0);return o;}
+  function touches(N,a,b){
+    var ar=Math.floor(a/N),ac=a%N,br=Math.floor(b/N),bc=b%N;
+    return Math.abs(ar-br)<=1&&Math.abs(ac-bc)<=1&&a!==b;
+  }
+  // TWO-BLOCK / TOUCH RULE: any live square adjacent to EVERY remaining
+  // square of some unit is impossible -- wherever that unit's star lands
+  // it would touch it. For a domino this clears both long sides.
+  function findTouch(ctx){
+    var N=ctx.N,f,i,cs,seed,nb,dr,dc,nr,nc,x,j,all;
+    for(f=0;f<3;f++)for(i=0;i<N;i++){
+      if(famDone(ctx,f,i))continue;
+      cs=famCands(ctx,f,i);
+      if(cs.length<2||cs.length>6)continue;
+      seed=cs[0]; nb=[];
+      for(dr=-1;dr<=1;dr++)for(dc=-1;dc<=1;dc++){
+        nr=Math.floor(seed/N)+dr; nc=(seed%N)+dc;
+        if(nr<0||nr>=N||nc<0||nc>=N)continue;
+        x=nr*N+nc;
+        if(x===seed||!ctx.cand[x])continue;
+        if(cs.indexOf(x)!==-1)continue;
+        nb.push(x);
+      }
+      var elim=[];
+      for(j=0;j<nb.length;j++){
+        all=true;
+        for(var q=1;q<cs.length;q++) if(!touches(N,nb[j],cs[q])){all=false;break;}
+        if(all)elim.push(nb[j]);
+      }
+      if(elim.length)return {family:f,idx:i,cands:cs,elim:elim};
+    }
+    return null;
+  }
+  function findStarved(ctx,cell){
+    var N=ctx.N,r=Math.floor(cell/N),c=cell%N,g=ctx.regionOf[cell],kill={},k,dr,dc,nr,nc,f,i,cs,ok,q;
+    for(k=0;k<N;k++){kill[r*N+k]=1;kill[k*N+c]=1;}
+    for(k=0;k<ctx.rc[g].length;k++)kill[ctx.rc[g][k]]=1;
+    for(dr=-1;dr<=1;dr++)for(dc=-1;dc<=1;dc++){nr=r+dr;nc=c+dc;
+      if(nr>=0&&nr<N&&nc>=0&&nc<N)kill[nr*N+nc]=1;}
+    for(f=0;f<3;f++)for(i=0;i<N;i++){
+      if(famDone(ctx,f,i))continue;
+      if((f===0&&i===r)||(f===1&&i===c)||(f===2&&i===g))continue;
+      cs=famCands(ctx,f,i);
+      if(!cs.length)continue;
+      ok=true;
+      for(q=0;q<cs.length;q++) if(!kill[cs[q]]){ok=false;break;}
+      if(ok){
+        var kl=[];
+        for(var z=0;z<N*N;z++) if(kill[z]&&ctx.cand[z]&&z!==cell) kl.push(z);
+        return {family:f,idx:i,kill:kl,doomed:cs};
+      }
+    }
+    return null;
+  }
+  var PAIRS=[[2,0],[0,2],[2,1],[1,2],[0,1],[1,0]];
+  function findConfine(ctx,k){
+    var N=ctx.N,pi,fa,fb,und,i,S,bs,ok,a,cs,x,sSet,elim,b,cc,q;
+    for(pi=0;pi<PAIRS.length;pi++){
+      fa=PAIRS[pi][0]; fb=PAIRS[pi][1];
+      und=[];for(i=0;i<N;i++)if(!famDone(ctx,fa,i))und.push(i);
+      if(und.length<k)continue;
+      var all=combos(und,k);
+      for(var si=0;si<all.length;si++){
+        S=all[si]; bs={}; var bsn=0; ok=true;
+        for(q=0;q<S.length;q++){
+          a=S[q]; cs=famCands(ctx,fa,a);
+          if(!cs.length){ok=false;break;}
+          for(var ci=0;ci<cs.length;ci++){var bi=famIdx(ctx,fb,cs[ci]); if(!bs[bi]){bs[bi]=1;bsn++;}}
+          if(bsn>k){ok=false;break;}
+        }
+        if(!ok||bsn!==k)continue;
+        sSet={};for(q=0;q<S.length;q++)sSet[S[q]]=1;
+        elim=[];
+        var bkeys=Object.keys(bs).map(Number);
+        for(q=0;q<bkeys.length;q++){
+          cc=famCands(ctx,fb,bkeys[q]);
+          for(ci=0;ci<cc.length;ci++) if(!sSet[famIdx(ctx,fa,cc[ci])]) elim.push(cc[ci]);
+        }
+        if(elim.length)return {k:k,fa:fa,fb:fb,S:S,bs:bkeys,elim:elim};
+      }
+    }
+    return null;
+  }
+  function nextDeduction(ctx,maxLevel){
+    maxLevel=maxLevel||MAX_TECH_LEVEL;
+    var N=ctx.N,f,i,cs,r;
+    if(ctx.placedCount>=N)return null;
+    for(f=0;f<3;f++)for(i=0;i<N;i++){
+      if(famDone(ctx,f,i))continue;
+      cs=famCands(ctx,f,i);
+      if(cs.length===0)return {level:0,kind:'dead'};
+      if(cs.length===1)return {level:1,kind:'single',family:f,idx:i,cell:cs[0]};
+    }
+    if(maxLevel>=2){ r=findTouch(ctx); if(r)return {level:2,kind:'touch',family:r.family,idx:r.idx,cands:r.cands,elim:r.elim}; }
+    if(maxLevel>=3){ r=findConfine(ctx,1); if(r){r.level=3;r.kind='confine';return r;} }
+    if(maxLevel>=4){ for(var k=2;k<=3;k++){ r=findConfine(ctx,k); if(r){r.level=4;r.kind='confine';return r;} } }
+    if(maxLevel>=5){
+      for(var x=0;x<N*N;x++){
+        if(!ctx.cand[x])continue;
+        var st=findStarved(ctx,x);
+        if(st)return {level:5,kind:'contradiction',cell:x,starved:st};
+      }
+    }
+    return null;
+  }
+  function apply(ctx,d){
+    if(d.kind==='single'){ctxPlace(ctx,d.cell);return {place:d.cell};}
+    if(d.kind==='touch'||d.kind==='confine'){for(var i=0;i<d.elim.length;i++)ctx.cand[d.elim[i]]=0;return {eliminate:d.elim};}
+    if(d.kind==='contradiction'){ctx.cand[d.cell]=0;return {eliminate:[d.cell]};}
+    return {};
+  }
+  function solvableAt(N,regionOf,maxLevel){
+    var ctx=makeCtx(N,regionOf),guard=0;
+    while(guard++<6000){
+      var d=nextDeduction(ctx,maxLevel);
+      if(!d||d.kind==='dead')break;
+      apply(ctx,d);
+    }
+    return {solved:ctx.placedCount===N,ctx:ctx};
+  }
+  function requiredLevel(N,regionOf){
+    for(var L=1;L<=MAX_TECH_LEVEL;L++) if(solvableAt(N,regionOf,L).solved) return L;
+    return Infinity;
+  }
+  function solutionOf(N,regionOf){
+    var res=solvableAt(N,regionOf,MAX_TECH_LEVEL);
+    return res.solved?Array.from(res.ctx.rowS):null;
+  }
+  function pos(N,x){return 'row '+(Math.floor(x/N)+1)+', column '+(x%N+1);}
+
+  function describe(ctx,d){
+    var N=ctx.N,steps=[];
+    if(d.kind==='single'){
+      var unit=famCells(ctx,d.family,d.idx);
+      steps.push({text:'Only one square is still open in <em>'+famLabel(d.family,d.idx)+'</em>.',region:unit,focus:famCands(ctx,d.family,d.idx)});
+      steps.push({text:'So its star goes there \u2014 <em>'+pos(N,d.cell)+'</em>.',region:unit,focus:[d.cell]});
+      return {kicker:'ONLY SQUARE LEFT',steps:steps,apply:'place'};
+    }
+    if(d.kind==='touch'){
+      var lbl=famLabel(d.family,d.idx);
+      steps.push({text:'The star for <em>'+lbl+'</em> has to be one of these '+d.cands.length+' squares.',focus:d.cands});
+      steps.push({text:'Every one of them <em>touches</em> the squares marked here \u2014 so a star there would end up next to it, whichever way it falls.',focus:d.cands,kill:d.elim});
+      steps.push({text:'So those squares are <strong>impossible</strong>. Marking them out.',focus:d.cands,kill:d.elim});
+      return {kicker:'TOUCHING SQUARES',steps:steps,apply:'eliminate'};
+    }
+    if(d.kind==='confine'){
+      var srcCells=[],dstCells=[],q;
+      for(q=0;q<d.S.length;q++) srcCells=srcCells.concat(famCells(ctx,d.fa,d.S[q]));
+      for(q=0;q<d.bs.length;q++) dstCells=dstCells.concat(famCells(ctx,d.fb,d.bs[q]));
+      var srcLabel=d.k===1?famLabel(d.fa,d.S[0]):famPlural(d.fa,d.S);
+      var dstLabel=d.k===1?famLabel(d.fb,d.bs[0]):famPlural(d.fb,d.bs);
+      if(d.k===1){
+        steps.push({text:'Every square still open in <em>'+srcLabel+'</em> lies inside <em>'+dstLabel+'</em>.',region:srcCells,focus:famCands(ctx,d.fa,d.S[0])});
+        steps.push({text:'So the star for <em>'+dstLabel+'</em> has to be one of those.',region:dstCells,focus:famCands(ctx,d.fa,d.S[0])});
+      } else {
+        steps.push({text:'Between them, <em>'+srcLabel+'</em> can only use <em>'+dstLabel+'</em>.',region:srcCells});
+        steps.push({text:d.k+' of them needing exactly '+d.k+' of those fills every one \u2014 no room for anybody else.',region:dstCells});
+      }
+      steps.push({text:'So every other square in <em>'+dstLabel+'</em> is <strong>impossible</strong>. Marking them out.',region:dstCells,kill:d.elim});
+      return {kicker:d.k===1?'LINE CONFINEMENT':'SET CONFINEMENT',steps:steps,apply:'eliminate'};
+    }
+    var st=d.starved;
+    var regionCells=ctx.rc[ctx.regionOf[d.cell]];
+    steps.push({text:'Suppose a star went in the highlighted square \u2014 <em>'+pos(N,d.cell)+'</em>, in '+famLabel(2,ctx.regionOf[d.cell])+'.',region:regionCells,focus:[d.cell]});
+    steps.push({text:'It would rule out everything it can see \u2014 its row, its column, its own region, and every square touching it.',focus:[d.cell],kill:st.kill});
+    steps.push({text:'But that wipes out every square still open in <em>'+famLabel(st.family,st.idx)+'</em>, leaving it <strong>nowhere to put its star</strong>.',focus:[d.cell],kill:st.kill,starve:famCells(ctx,st.family,st.idx)});
+    steps.push({text:'So a star there is <strong>impossible</strong>. Marking it out.',focus:[d.cell]});
+    return {kicker:'CONTRADICTION',steps:steps,apply:'eliminate'};
+  }
+  return {makeCtx:makeCtx,ctxPlace:ctxPlace,nextDeduction:nextDeduction,apply:apply,
+          describe:describe,famCells:famCells,famCands:famCands,findStarved:findStarved,
+          findTouch:findTouch,solvableAt:solvableAt,requiredLevel:requiredLevel,
+          solutionOf:solutionOf,pos:pos,famLabel:famLabel};
+})();
+
+
+
+(function(){
+  var N=9, board=document.getElementById('dBoard');
+  var RC=['#8E3B4E','#B4642A','#8A7A28','#2E6B44','#1F6E74','#2A5A9E','#5A4A9E','#8E3B7E','#3B6E8E','#6E5B28'];
+  var XS='<svg class="gx" viewBox="0 0 100 100"><path d="M26 26 L74 74 M74 26 L26 74" stroke="rgba(255,255,255,.85)" stroke-width="15" stroke-linecap="round" fill="none"/></svg>';
+  var SS='<svg class="gs" viewBox="0 0 100 100"><polygon points="50,10 61.8,37.9 92.3,39.5 68.3,58.6 76,88 50,71 24,88 31.7,58.6 7.7,39.5 38.2,37.9" fill="#FFF1C9"/></svg>';
+  var DNAME={1:'Gentle',2:'Easy',3:'Medium',4:'Hard',5:'Fiendish'};
+  var EMPTY=0, MARK=1, STAR=2;
+  var puz=null, solSet=null, st=null, hearts=3, mistakes=0;
+  var solved=false, dead=false, elapsed=0, t0=null, tick=null;
+
+  function dateKey(d){
+    d=d||new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function fnv(str){var x=2166136261>>>0;for(var i=0;i<str.length;i++){x^=str.charCodeAt(i);x=Math.imul(x,16777619)>>>0;}return x>>>0;}
+
+  function buildDaily(key){
+    var seed=fnv(key), a=0, g=null;
+    while(!g && a<5000){
+      var c=SD.generatePuzzle(N,SD.hashInts(seed,a++),700);
+      if(c && Hint.requiredLevel(N,c.regionOf)>=3) g=c;
+    }
+    if(!g){ a=0; while(!g&&a<5000) g=SD.generatePuzzle(N,SD.hashInts(seed,a++),700); }
+    return g;
+  }
+
+  function draw(){
+    board.style.gridTemplateColumns='repeat('+N+',1fr)';
+    board.innerHTML='';
+    for(var i=0;i<N*N;i++){
+      var d=document.createElement('div');
+      d.className='dcell'; d.dataset.i=i;
+      d.style.background=RC[puz.regionOf[i]%RC.length];
+      d.innerHTML=XS+SS;
+      board.appendChild(d);
+    }
+  }
+  function renderCell(i){
+    var c=board.children[i];
+    c.classList.toggle('x',st[i]===MARK);
+    c.classList.toggle('s',st[i]===STAR);
+  }
+  function renderAll(){ for(var i=0;i<N*N;i++) renderCell(i); }
+
+  function renderHearts(){
+    var h=document.getElementById('dHearts');
+    if(!h) return;
+    var out='';
+    for(var i=0;i<3;i++) out+='<span class="hrt'+(i<hearts?'':' gone')+'">&#10084;</span>';
+    h.innerHTML=out;
+  }
+
+  function starsPlaced(){var n=0;for(var i=0;i<N*N;i++) if(st[i]===STAR)n++;return n;}
+
+  /* ---- placing a star, exactly as the app does it ----
+     A star is only accepted if it is genuinely part of the solution. A wrong
+     one costs a heart, turns into an X, and shakes. You cannot build a board
+     of stars that merely happens not to clash. */
+  function placeStar(i){
+    if(solved||dead) return;
+    if(st[i]===STAR){
+      st[i]=EMPTY; renderCell(i); save(); status(); return;
+    }
+    if(solSet.has(i)){
+      st[i]=STAR; renderCell(i); save();
+      if(starsPlaced()===N) win(); else status();
+    } else {
+      hearts--; mistakes++;
+      st[i]=MARK; renderCell(i); renderHearts();
+      var c=board.children[i];
+      c.classList.remove('wrong'); void c.offsetWidth; c.classList.add('wrong');
+      setTimeout(function(){c.classList.remove('wrong');},470);
+      save();
+      if(hearts<=0) lose(); else status('That square cannot hold a star.');
+    }
+  }
+
+  function status(msg){
+    var el=document.getElementById('dStatus');
+    if(solved||dead) return;
+    if(msg){ el.innerHTML=msg; return; }
+    el.innerHTML='<b>'+starsPlaced()+'</b> of <b>'+N+'</b> stars placed.';
+  }
+
+  function save(){
+    try{localStorage.setItem('sd.daily.'+dateKey(),
+      JSON.stringify({st:st,solved:solved,dead:dead,h:hearts,m:mistakes,el:elapsed}));}catch(e){}
+  }
+  function load(){
+    try{
+      var raw=localStorage.getItem('sd.daily.'+dateKey()); if(!raw) return false;
+      var o=JSON.parse(raw);
+      if(o&&o.st&&o.st.length===N*N){
+        st=o.st; solved=!!o.solved; dead=!!o.dead;
+        hearts=(typeof o.h==='number')?o.h:3; mistakes=o.m||0; elapsed=o.el||0;
+        return true;
+      }
+    }catch(e){}
+    return false;
+  }
+
+  function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+  function startTimer(){
+    if(solved||dead) return;
+    t0=Date.now()-elapsed*1000; clearInterval(tick);
+    tick=setInterval(function(){
+      elapsed=Math.floor((Date.now()-t0)/1000);
+      document.getElementById('dTimer').textContent=fmt(elapsed);
+    },1000);
+  }
+
+  function win(){
+    solved=true; clearInterval(tick); save();
+    document.getElementById('dStatus').innerHTML='Solved in <b>'+fmt(elapsed)+'</b>.';
+    var pts=[];
+    for(var i=0;i<N*N;i++) if(st[i]===STAR) pts.push({x:((i%N)+.5)/N*100,y:(Math.floor(i/N)+.5)/N*100});
+    var svg=document.getElementById('dConst'); svg.innerHTML='';
+    pts.forEach(function(p,k){
+      if(!k) return;
+      var q=pts[k-1];
+      var ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+      ln.setAttribute('x1',q.x);ln.setAttribute('y1',q.y);ln.setAttribute('x2',q.x);ln.setAttribute('y2',q.y);
+      svg.appendChild(ln);
+      setTimeout(function(){ln.style.transition='all .3s ease';ln.setAttribute('x2',p.x);ln.setAttribute('y2',p.y);},70*k);
+    });
+    setTimeout(function(){
+      document.getElementById('dWinSub').innerHTML='Today\u2019s Daily Star, solved in <b>'+fmt(elapsed)
+        +'</b> with <b>'+mistakes+'</b> mistake'+(mistakes===1?'':'s')+'.';
+      document.getElementById('dWin').classList.add('on');
+    }, 70*pts.length+500);
+  }
+
+  function lose(){
+    dead=true; clearInterval(tick); save();
+    document.getElementById('dStatus').innerHTML='Out of hearts. Come back tomorrow, or try the printables.';
+    document.getElementById('dLoseSub').innerHTML='You ran out of hearts on today\u2019s puzzle. '
+      +'Everyone gets the same board, so there is always tomorrow.';
+    document.getElementById('dLose').classList.add('on');
+  }
+
+  /* ---- drag to sweep X's, exactly as the app does ----
+     Dragging paints X's on. Starting the drag on an existing X wipes them off
+     instead. Stars are never touched by a sweep. */
+  var sweeping=false, sweepErase=false, swept=null;
+  function idFrom(e){
+    var el=document.elementFromPoint(e.clientX,e.clientY);
+    if(!el) return -1;
+    var c=el.closest? el.closest('.dcell') : null;
+    return c? +c.dataset.i : -1;
+  }
+  function sweepAt(i){
+    if(i<0||swept[i]) return;
+    swept[i]=1;
+    if(st[i]===STAR) return;
+    var want = sweepErase ? EMPTY : MARK;
+    if(st[i]!==want){ st[i]=want; renderCell(i); }
+  }
+  board.addEventListener('pointerdown',function(e){
+    if(solved||dead) return;
+    var i=idFrom(e); if(i<0) return;
+    lastDown={i:i,t:Date.now()};
+    if(st[i]===STAR) return;              // a star is handled by tap, not sweep
+    sweeping=true; sweepErase=(st[i]===MARK); swept={};
+    board.setPointerCapture&&board.setPointerCapture(e.pointerId);
+    sweepAt(i);
+    e.preventDefault();
+  });
+  board.addEventListener('pointermove',function(e){
+    if(!sweeping) return;
+    sweepAt(idFrom(e));
+  });
+  function endSweep(){
+    if(!sweeping) return;
+    sweeping=false; save(); status();
+  }
+  board.addEventListener('pointerup',endSweep);
+  board.addEventListener('pointercancel',endSweep);
+
+  /* ---- double tap places a star ---- */
+  var lastDown=null, lastTap={i:-1,t:0}, DOUBLE=300;
+  board.addEventListener('click',function(e){
+    if(solved||dead) return;
+    var c=e.target.closest('.dcell'); if(!c) return;
+    var i=+c.dataset.i, now=Date.now();
+    if(lastTap.i===i && now-lastTap.t<DOUBLE){
+      lastTap={i:-1,t:0};
+      // undo the X the first tap of the double-tap laid down
+      if(st[i]===MARK) { st[i]=EMPTY; renderCell(i); }
+      placeStar(i);
+    } else {
+      lastTap={i:i,t:now};
+    }
+  });
+
+  function countdown(){
+    var el=document.getElementById('dNext');
+    function upd(){
+      var n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,0,0);
+      var s=Math.max(0,Math.floor((m-n)/1000));
+      el.textContent='Next puzzle in '+Math.floor(s/3600)+'h '
+        +String(Math.floor(s/60)%60).padStart(2,'0')+'m '+String(s%60).padStart(2,'0')+'s';
+    }
+    upd(); setInterval(upd,1000);
+  }
+
+  // boot
+  var key=dateKey();
+  document.getElementById('dDate').textContent=new Date().toLocaleDateString(undefined,
+    {weekday:'long',day:'numeric',month:'long'});
+  puz=buildDaily(key);
+  solSet=new Set(puz.solutionCells);
+  document.getElementById('dDiff').innerHTML='Difficulty <b>'+DNAME[Hint.requiredLevel(N,puz.regionOf)]+'</b>';
+  draw();
+  if(!load()) st=new Array(N*N).fill(EMPTY);
+  renderAll(); renderHearts();
+  document.getElementById('dTimer').textContent=fmt(elapsed);
+  if(solved){ status(); win(); }
+  else if(dead){ lose(); }
+  else { startTimer(); status(); }
+  countdown();
+
+  document.getElementById('dClear').onclick=function(){
+    if(solved||dead) return;
+    st=new Array(N*N).fill(EMPTY); renderAll(); save(); status();
+    document.getElementById('dConst').innerHTML='';
+  };
+})();
+</script>
+
+</body></html>
